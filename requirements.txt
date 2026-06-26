@@ -5,3 +5,7 @@ pydantic-settings
 python-jose[cryptography]
 python-multipart
 email-validator
+sqlalchemy
+asyncpg
+alembic
+greenlet

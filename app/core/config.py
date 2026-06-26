@@ -18,6 +18,8 @@ class Settings(BaseSettings):
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     REFRESH_TOKEN_EXPIRE_DAYS: int
+    DATABASE_URL: str
+    SYNC_DATABASE_URL: str
 
     model_config = SettingsConfigDict(
         env_file=".env",
