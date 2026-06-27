@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-
+from app.api.internal import router as internal_router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.company import router as company_router
@@ -38,5 +38,10 @@ app.include_router(
 
 app.include_router(
     company_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    internal_router,
     prefix="/api/v1",
 )

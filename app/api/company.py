@@ -13,36 +13,6 @@ router = APIRouter(
     tags=["Companies"],
 )
 
-@router.post(
-    "",
-    response_model=CompanyResponse,
-)
-async def create_company(
-    company: CompanyCreate,
-    db: AsyncSession = Depends(get_db),
-):
-
-    service = CompanyService(db)
-
-    existing = await service.get_company(
-        company.ticker
-    )
-
-    if existing:
-
-        raise HTTPException(
-            status_code=400,
-            detail="Company already exists.",
-        )
-
-    return await service.create_company(
-        ticker=company.ticker,
-        cik=company.cik,
-        name=company.name,
-        exchange=company.exchange,
-        sector=company.sector,
-        industry=company.industry,
-    )
 
 @router.get(
     "/{ticker}",
