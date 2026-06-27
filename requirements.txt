@@ -10,3 +10,4 @@ asyncpg
 alembic
 greenlet
 google-auth
+requests
