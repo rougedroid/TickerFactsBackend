@@ -1,6 +1,6 @@
 from datetime import datetime
 from uuid import uuid4
-
+from sqlalchemy.orm import relationship
 from sqlalchemy import DateTime, String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -29,6 +29,7 @@ class Company(Base):
         String(10),
         unique=True,
         nullable=False,
+        index=True,
     )
 
     name: Mapped[str] = mapped_column(
@@ -58,3 +59,9 @@ class Company(Base):
         server_default=func.now(),
         onupdate=func.now(),
     )
+
+    filings = relationship(
+    "Filing",
+    back_populates="company",
+    cascade="all, delete-orphan",
+)

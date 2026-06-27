@@ -12,20 +12,17 @@ class CompanyRepository:
     async def get_by_ticker(self, ticker: str):
 
         result = await self.db.execute(
-            select(Company).where(
-                Company.ticker == ticker.upper()
-            )
+            select(Company).where(Company.ticker == ticker.upper())
         )
 
         return result.scalar_one_or_none()
 
-    async def get_by_cik(self, cik: str):
+    async def get_by_cik(
+        self,
+        cik: str,
+    ):
 
-        result = await self.db.execute(
-            select(Company).where(
-                Company.cik == cik
-            )
-        )
+        result = await self.db.execute(select(Company).where(Company.cik == cik))
 
         return result.scalar_one_or_none()
 

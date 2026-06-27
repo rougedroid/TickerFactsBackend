@@ -1,3 +1,4 @@
 from .user_repository import UserRepository
 from .session_repository import SessionRepository
 from .company_repository import CompanyRepository
+from .filing_repository import FilingRepository
