@@ -40,3 +40,52 @@ class FilingService:
             processed_info=filing.processed_info,
             filing_url=filing.filing_url,
         )
+    
+    async def latest(
+        self,
+        limit: int = 20,
+    ):
+
+        return await self.filings.get_latest(
+            limit
+        )
+
+    async def company_filings(
+    self,
+    ticker: str,
+    limit: int = 50,
+):
+
+        company = await self.companies.get_company(
+            ticker
+        )
+
+        if company is None:
+
+            raise ValueError(
+                "Company not found."
+            )
+
+        return await self.filings.get_company_filings(
+            company.cik,
+            limit,
+        )
+    
+    async def get(
+    self,
+    accession_number: str,
+):
+
+        filing = await self.filings.get_by_accession(
+            accession_number
+        )
+
+        if filing is None:
+
+            raise ValueError(
+                "Filing not found."
+            )
+
+        return filing
+    
+    

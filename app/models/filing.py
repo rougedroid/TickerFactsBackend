@@ -55,3 +55,9 @@ class Filing(Base):
         "Company",
         back_populates="filings",
     )
+
+    metrics = relationship(
+        "Metric",
+        back_populates="filing",
+        cascade="all, delete-orphan",
+    )

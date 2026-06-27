@@ -5,22 +5,16 @@ from app.repositories.company_repository import CompanyRepository
 
 class CompanyService:
 
-    def __init__(self, db: AsyncSession):
-
-        self.company_repo = CompanyRepository(db)
-
-    async def get_company(
+    def __init__(
         self,
-        ticker: str,
+        db: AsyncSession,
     ):
-        return await self.company_repo.get_by_ticker(
-            ticker
-        )
 
-    async def create_company(
+        self.repo = CompanyRepository(db)
+
+    async def search(
         self,
-        **kwargs,
+        query: str,
     ):
-        return await self.company_repo.create(
-            **kwargs
-        )
+
+        return await self.repo.search(query)

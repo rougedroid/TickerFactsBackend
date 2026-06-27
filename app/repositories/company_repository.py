@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from sqlalchemy import or_
 from app.models.company import Company
 
 
@@ -52,3 +52,22 @@ class CompanyRepository:
         await self.db.refresh(company)
 
         return company
+    
+    async def search(
+    self,
+    query: str,
+    limit: int = 15,
+):
+
+        result = await self.db.execute(
+            select(Company)
+            .where(
+                or_(
+                    Company.ticker.ilike(f"{query}%"),
+                    Company.name.ilike(f"%{query}%"),
+                )
+            )
+            .limit(limit)
+        )
+
+        return result.scalars().all()
