@@ -21,9 +21,7 @@ class AuthService:
         if google_user is None:
             raise ValueError("Invalid Google token.")
 
-        user = await self.users.get_by_provider_id(
-            google_user["provider_id"]
-        )
+        user = await self.users.get_by_provider_id(google_user["provider_id"])
 
         if user is None:
 
