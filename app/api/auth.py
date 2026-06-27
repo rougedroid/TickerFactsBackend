@@ -1,4 +1,11 @@
-from fastapi import APIRouter
+from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db.database import get_db
+from app.schemas.auth import GoogleAuth
+from app.services.auth_service import AuthService
+
 
 router = APIRouter(
     prefix="/auth",
@@ -6,21 +13,42 @@ router = APIRouter(
 )
 
 
-# @router.post("/register")
-# async def register():
-#     return {"message": "Coming soon"}
+@router.post("/google")
+async def google_login(
+    payload: GoogleAuth,
+    db: AsyncSession = Depends(get_db),
+):
 
+    service = AuthService(db)
 
-# @router.post("/login")
-# async def login():
-#     return {"message": "Coming soon"}
+    try:
+        tokens = await service.login_with_google(
+            payload.credential
+        )
+        response = JSONResponse(
+           content={"message": "Login successful"}
+        )
+        response.set_cookie(
+    key="access_token",
+    value=tokens["access_token"],
+    httponly=True,
+    secure=False,      # localhost
+    samesite="lax",
+    max_age=60 * 15,
+)
+        response.set_cookie(
+    key="refresh_token",
+    value=tokens["refresh_token"],
+    httponly=True,
+    secure=False,
+    samesite="lax",
+    max_age=60 * 60 * 24 * 30,
+)
+        return response
 
+    except ValueError as e:
 
-@router.post("/refresh")
-async def refresh():
-    return {"message": "Coming soon"}
-
-
-@router.get("/me")
-async def me():
-    return {"message": "Coming soon"}
+        raise HTTPException(
+            status_code=401,
+            detail=str(e),
+        )

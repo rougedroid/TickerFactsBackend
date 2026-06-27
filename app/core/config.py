@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int
     DATABASE_URL: str
     SYNC_DATABASE_URL: str
+    GOOGLE_CLIENT_ID: str
 
     model_config = SettingsConfigDict(
         env_file=".env",
