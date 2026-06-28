@@ -11,3 +11,8 @@ alembic
 greenlet
 google-auth
 requests
+httpx
+feedparser
+python-dotenv
+sqlalchemy
+lxml
