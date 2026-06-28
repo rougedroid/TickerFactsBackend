@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from app.models.metric import Metric
+from app.repositories.metric_repository import MetricRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.filing_repository import FilingRepository
 
@@ -14,6 +15,7 @@ class FilingService:
         self.filings = FilingRepository(db)
 
         self.companies = CompanyRepository(db)
+        self.metrics = MetricRepository(db)
 
     async def ingest(
         self,
@@ -31,7 +33,7 @@ class FilingService:
 
             raise ValueError(f"Company with CIK {filing.cik} not found.")
 
-        return await self.filings.create(
+        created_filing = await self.filings.create(
             accession_number=filing.accession_number,
             cik=filing.cik,
             form_type=filing.form_type,
@@ -40,7 +42,29 @@ class FilingService:
             processed_info=filing.processed_info,
             filing_url=filing.filing_url,
         )
-    
+
+        metric_rows = []
+
+        for metric in filing.metrics:
+
+            metric_rows.append(
+                Metric(
+                    accession_number=created_filing.accession_number,
+                    metric_name=metric.metric_name,
+                    metric_category=metric.metric_category,
+                    numeric_value=metric.numeric_value,
+                    text_value=metric.text_value,
+                    boolean_value=metric.boolean_value,
+                    unit=metric.unit,
+                    period=metric.period,
+                )
+            )
+
+        if metric_rows:
+            await self.metrics.bulk_create(metric_rows)
+
+        return created_filing
+
     async def latest(
         self,
         limit: int = 20,

@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     SYNC_DATABASE_URL: str
     GOOGLE_CLIENT_ID: str
     PIPELINE_API_KEY: str
+    SEC_USER_AGENT: str
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 

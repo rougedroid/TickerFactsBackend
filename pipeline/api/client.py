@@ -14,17 +14,21 @@ class BackendClient:
             timeout=30
         )
 
-    def send_metrics(self, payload: dict):
+    def send_filing(self, payload: dict):
 
         response = self.client.post(
-            f"{API_URL}/pipeline/metrics",
-            json=payload
+            f"{API_URL}/api/v1/internal/filings",
+            json=payload,
+            headers={
+                "x-api-key": API_KEY
+            }
         )
 
         response.raise_for_status()
 
         return response.json()
-
+    
+    
     def health(self):
 
         response = self.client.get(

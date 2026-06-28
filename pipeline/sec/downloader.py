@@ -21,3 +21,9 @@ class FilingDownloader:
 
     def close(self):
         self.client.close()
+
+    def download_document(self, document):
+        response = self.client.get(document.url)
+        response.raise_for_status()
+
+        return response.text

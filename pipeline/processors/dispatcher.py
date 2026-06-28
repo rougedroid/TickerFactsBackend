@@ -63,7 +63,7 @@ class Dispatcher:
             )
 
             if payload is not None:
-                self.backend.send_metrics(payload)
+                self.backend.send_filing(payload)
 
             if filing.form_type in ("8-K", "10-K"):
                 self.repository.update_status(

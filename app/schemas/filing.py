@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from app.schemas.metric import MetricCreate
 from pydantic import BaseModel, ConfigDict
 
 
@@ -18,6 +18,8 @@ class FilingCreate(BaseModel):
     processed_info: dict | None = None
 
     filing_url: str
+
+    metrics: list[MetricCreate] = []
 
 
 class FilingResponse(BaseModel):
