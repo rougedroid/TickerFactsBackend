@@ -3,7 +3,9 @@ from lxml import etree
 
 from config import SEC_USER_AGENT
 from models.filing import Filing
+from utils.logger import get_logger
 
+logger = get_logger(__name__)
 
 RSS_URL = "https://www.sec.gov/Archives/edgar/xbrlrss.all.xml"
 
@@ -28,7 +30,9 @@ class RSSPoller:
         namespace = {
             "edgar": "https://www.sec.gov/Archives/edgar"
         }
-
+        logger.info(
+    f"Fetched {len(filings)} filings from SEC RSS."
+)
         for item in root.findall(".//item"):
 
             accession = item.findtext(".//{*}accessionNumber")

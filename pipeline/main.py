@@ -6,6 +6,11 @@ from sec.parser import FilingParser
 from processors.dispatcher import Dispatcher
 from api.client import BackendClient
 
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
+
+
 db = Database()
 db.initialize()
 
@@ -20,7 +25,7 @@ dispatcher = Dispatcher(
 )
 backend = BackendClient()
 
-
+logger.info("Pipeline started.")
 
 filings = poller.get_latest_filings()
 
@@ -44,3 +49,4 @@ downloader.close()
 poller.close()
 db.close()
 backend.close()
+logger.info("Pipeline stopped.")

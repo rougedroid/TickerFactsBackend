@@ -1,7 +1,9 @@
 import httpx
 
 from config import API_KEY, API_URL
+from utils.logger import get_logger
 
+logger = get_logger(__name__)
 
 class BackendClient:
 
@@ -15,7 +17,9 @@ class BackendClient:
         )
 
     def send_filing(self, payload: dict):
-
+        logger.info(
+    f"Sending {payload['accession_number']} to backend."
+)
         response = self.client.post(
             f"{API_URL}/api/v1/internal/filings",
             json=payload,
@@ -25,10 +29,10 @@ class BackendClient:
         )
 
         response.raise_for_status()
-
+        logger.info("Backend accepted filing.")
         return response.json()
     
-    
+
     def health(self):
 
         response = self.client.get(
