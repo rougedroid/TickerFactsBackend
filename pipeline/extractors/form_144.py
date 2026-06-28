@@ -1,7 +1,7 @@
 from extractors.base import BaseExtractor
 
 
-class Form13DExtractor(BaseExtractor):
+class Form144Extractor(BaseExtractor):
 
     def extract(self, filing, documents):
         print("TODO: Form 4 extractor")
