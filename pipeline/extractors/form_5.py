@@ -4,4 +4,9 @@ from extractors.base import BaseExtractor
 class Form5Extractor(BaseExtractor):
 
     def extract(self, filing, documents):
-        print("TODO: Form 4 extractor")
+        return {
+            "form": filing.form_type,
+            "accession": filing.accession_number,
+            "company": filing.company_name,
+            "metrics": {},
+        }
