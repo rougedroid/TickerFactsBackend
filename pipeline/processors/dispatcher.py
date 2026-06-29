@@ -57,7 +57,17 @@ class Dispatcher:
 
                 return
 
-            payload = extractor.extract(filing, documents)
+            document = extractor.select_document(documents)
+
+            if document is None:
+                raise Exception("No document selected.")
+
+            xml = self.downloader.download(document.url)
+
+            payload = extractor.extract(
+                filing,
+                xml
+            )
 
             if payload is not None:
                 self.backend.send_filing(payload)

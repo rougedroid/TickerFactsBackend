@@ -5,7 +5,7 @@ from sec.downloader import FilingDownloader
 from sec.parser import FilingParser
 from processors.dispatcher import Dispatcher
 from api.client import BackendClient
-
+from api.client import BackendClient
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -13,7 +13,7 @@ logger = get_logger(__name__)
 
 db = Database()
 db.initialize()
-
+backend = BackendClient()
 repo = FilingRepository(db)
 
 poller = RSSPoller()
@@ -21,7 +21,8 @@ downloader = FilingDownloader()
 parser = FilingParser()
 dispatcher = Dispatcher(
     repository=repo,
-    downloader=downloader
+    downloader=downloader,
+    backend=backend
 )
 backend = BackendClient()
 
@@ -32,6 +33,12 @@ filings = poller.get_latest_filings()
 new_count = 0
 
 for filing in filings:
+    
+
+    if filing.form_type != "4":
+        continue
+
+    
 
     if repo.filing_exists(filing.accession_number):
         continue
@@ -50,3 +57,4 @@ poller.close()
 db.close()
 backend.close()
 logger.info("Pipeline stopped.")
+backend.close()
