@@ -36,12 +36,15 @@ class Dispatcher:
         )
 
         self.repository.update_status(
-            filing.accession_number, FilingStatus.PROCESSING.value
+            filing.accession_number,
+            FilingStatus.PROCESSING.value,
         )
 
         try:
 
-            index_html = self.downloader.download(filing.filing_url)
+            index_html = self.downloader.download(
+                filing.filing_url
+            )
 
             documents = self.parser.get_documents(index_html)
 
@@ -49,24 +52,21 @@ class Dispatcher:
 
             if extractor is None:
 
-                logger.warning(f"No extractor registered for {filing.form_type}")
+                logger.warning(
+                    f"No extractor registered for {filing.form_type}"
+                )
 
                 self.repository.update_status(
-                    filing.accession_number, FilingStatus.FAILED.value
+                    filing.accession_number,
+                    FilingStatus.FAILED.value,
                 )
 
                 return
 
-            document = extractor.select_document(documents)
-
-            if document is None:
-                raise Exception("No document selected.")
-
-            xml = self.downloader.download(document.url)
-
             payload = extractor.extract(
-                filing,
-                xml
+                filing=filing,
+                documents=documents,
+                downloader=self.downloader,
             )
 
             if payload is not None:
@@ -74,18 +74,26 @@ class Dispatcher:
 
             if filing.form_type in ("8-K", "10-K"):
                 self.repository.update_status(
-                    filing.accession_number, FilingStatus.WAITING_FOR_LLM.value
+                    filing.accession_number,
+                    FilingStatus.WAITING_FOR_LLM.value,
                 )
             else:
                 self.repository.update_status(
-                    filing.accession_number, FilingStatus.DONE.value
+                    filing.accession_number,
+                    FilingStatus.DONE.value,
                 )
-        except Exception as e:
 
-            logger.exception(f"Failed processing {filing.accession_number}")
+        except Exception:
 
-            self.repository.increment_retry(filing.accession_number)
+            logger.exception(
+                f"Failed processing {filing.accession_number}"
+            )
+
+            self.repository.increment_retry(
+                filing.accession_number
+            )
 
             self.repository.update_status(
-                filing.accession_number, FilingStatus.FAILED.value
+                filing.accession_number,
+                FilingStatus.FAILED.value,
             )

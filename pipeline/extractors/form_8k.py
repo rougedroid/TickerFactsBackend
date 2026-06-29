@@ -1,7 +1,7 @@
 from extractors.base import BaseExtractor
 
 
-class Form13FExtractor(BaseExtractor):
+class Form8KExtractor(BaseExtractor):
 
     def select_document(self, documents):
         return None

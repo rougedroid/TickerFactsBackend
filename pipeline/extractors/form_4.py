@@ -1,39 +1,49 @@
 from copy import deepcopy
 
 from lxml import etree
+import re
 
 from extractors.base import BaseExtractor
 from models.document import FilingDocument
 from schemas.form4 import FORM4_SCHEMA
 
-
+FORM4_PATTERNS = [
+    r".*form[^a-zA-Z0-9]*4.*\.xml$",
+    r".*ownership.*\.xml$",
+    r".*\.xml$",
+]
 class Form4Extractor(BaseExtractor):
 
-    def select_document(
-        self,
-        documents: list[FilingDocument]
-    ) -> FilingDocument | None:
-
-        for doc in documents:
-
-            if doc.extension == "xml":
-                return doc
-
-        return None
+    
 
     def extract(
-        self,
-        filing,
-        xml
-    ):
+    self,
+    filing,
+    documents,
+    downloader,
+):
+        
 
+        document = self.find_document(
+            documents,
+            FORM4_PATTERNS,
+        )
+
+        if document is None:
+            raise Exception("No XML filing document found.")
+
+        xml = downloader.download(document.url)
+        if xml is None:
+            raise Exception("XML not found.")
+
+        tree = etree.fromstring(xml.encode())
         payload = deepcopy(FORM4_SCHEMA)
 
         tree = etree.fromstring(
             xml.encode()
         )
 
-        print(etree.tostring(tree, pretty_print=True, encoding="unicode")[:5000])
+        
         
         def find(tag):
 
