@@ -27,8 +27,12 @@ class BackendClient:
                 "x-api-key": API_KEY
             }
         )
+        if response.status_code != 200:
+            logger.warning(response.status_code)
+            logger.warning(response.text)
 
         response.raise_for_status()
+        
         logger.info("Backend accepted filing.")
         return response.json()
     

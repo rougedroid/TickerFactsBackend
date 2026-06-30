@@ -56,8 +56,10 @@ class RSSPoller:
             cik = None
             filing_date = None
 
-            for line in summary.split("<br />"):
+            
 
+            for line in summary.split("<br />"):
+            
                 if "AccNo:" in line:
                     match = re.search(
                         r"AccNo:</b>\s*([0-9-]+)",
@@ -66,6 +68,7 @@ class RSSPoller:
 
                     if match:
                         accession = match.group(1)
+                        cik=accession[0:10]
 
                 elif "CIK:" in line:
                     cik = (

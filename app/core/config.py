@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str
     PIPELINE_API_KEY: str
     SEC_USER_AGENT: str
+    INTERNAL_API_KEY: str
+    API_URL: str
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 
