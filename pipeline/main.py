@@ -42,7 +42,7 @@ backend = BackendClient()
 
 logger.info("Pipeline started.")
 
-filings = poller.get_latest_filings()
+#filings = poller.get_latest_filings()
 print(len(filings))
 new_count = 0
 processed = 0

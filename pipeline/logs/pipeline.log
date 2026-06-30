@@ -37032,3 +37032,10 @@ Traceback (most recent call last):
 httpx.HTTPStatusError: Client error '400 Bad Request' for url 'http://localhost:8000/api/v1/internal/filings'
 For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
 [13:40:54] INFO | __main__ | Pipeline stopped.
+[15:09:10] INFO | __main__ | Pipeline started.
+[15:09:10] INFO | processors.dispatcher | Processing 4 | Hermanns Richard | 0001654954-26-006266
+[15:09:10] INFO | sec.downloader | Downloading https://www.sec.gov/Archives/edgar/data/1773971/000165495426006266/0001654954-26-006266-index.htm
+[15:09:10] INFO | sec.downloader | Downloading https://www.sec.gov/Archives/edgar/data/1140102/000165495426006266/section16.xml
+[15:09:10] INFO | api.client | Sending 0001654954-26-006266 to backend.
+[15:09:10] INFO | api.client | Backend accepted filing.
+[15:09:10] INFO | __main__ | Pipeline stopped.

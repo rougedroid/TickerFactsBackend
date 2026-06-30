@@ -14,6 +14,7 @@ class ExtractorRegistry:
         self.extractors = {
             "4": Form4Extractor(),
             "13F-HR": Form13FExtractor(),
+            "13F-HR/A": Form13FExtractor(),
             "SC 13D": Form13DExtractor(),
             "SC 13G": Form13GExtractor(),
             "144": Form144Extractor(),
