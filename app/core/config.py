@@ -25,7 +25,8 @@ class Settings(BaseSettings):
     SEC_USER_AGENT: str
     INTERNAL_API_KEY: str
     API_URL: str
-
+    REDIS_URL: str
+    FINNHUB_API_KEY: str
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 
 
