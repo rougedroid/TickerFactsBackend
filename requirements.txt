@@ -9,7 +9,7 @@ sqlalchemy
 asyncpg
 alembic
 greenlet
-logger
+websocket-client
 google-auth
 requests
 httpx
