@@ -1,7 +1,8 @@
 import asyncio
+
 import json
 from contextlib import suppress
-
+from app.core.logging import logger
 import websockets
 from websockets.asyncio.client import ClientConnection
 from app.realtime.broadcaster import broadcaster
@@ -72,7 +73,7 @@ class FinnhubClient:
 
         Raises on websocket disconnect so the connection loop can reconnect.
         """
-
+        logger.info("Listening for Finnhub messages...")
         if self._ws is None:
             raise RuntimeError("Finnhub websocket is not connected.")
 
@@ -87,6 +88,7 @@ class FinnhubClient:
             # Trade updates
             if message_type == "trade":
                 trades = payload.get("data", [])
+                logger.info(f"Received {len(trades)} trades from Finnhub.")
 
                 for trade in trades:
                     symbol = trade.get("s")
@@ -101,7 +103,8 @@ class FinnhubClient:
                         or timestamp is None
                     ):
                         continue
-
+                    
+                
                     await broadcaster.publish_price(
                         symbol=symbol,
                         price=price,
@@ -111,6 +114,12 @@ class FinnhubClient:
 
             # Finnhub ping message
             elif message_type == "ping":
+                logger.info("Received ping from Finnhub, sending pong.")
+                await self._ws.send(json.dumps({"type": "pong"}))
+                continue
+            else:
+                logger.warning(f"Unknown message type from Finnhub: {message_type}")
+                logger.warning(f"Message payload: {payload}")
                 continue
 
             # Unknown messages are ignored for now.
@@ -121,7 +130,7 @@ class FinnhubClient:
 
         This is called when the first client subscribes to a symbol.
         """
-
+        logger.info(f"Subscribing symbol: {symbol}")
         symbol = symbol.upper()
 
         if symbol in self._subscriptions:
@@ -157,6 +166,7 @@ class FinnhubClient:
         """
         Send a subscribe message to Finnhub.
         """
+        logger.info(f"Actually Subscribing symbol: {symbol}")
 
         if self._ws is None:
             return
