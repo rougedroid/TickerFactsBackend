@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     API_URL: str
     REDIS_URL: str
     FINNHUB_API_KEY: str
+    MASSIVE_API_KEY: str
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 
 
